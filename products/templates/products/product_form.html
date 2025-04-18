@@ -1,0 +1,97 @@
+{% extends 'user/base.html' %}
+
+{% block title %}Ajouter un produit - MyShop{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow-lg rounded-lg p-6 max-w-2xl mx-auto">
+    <h1 class="text-2xl font-semibold text-secondary-900 mb-6">Ajouter un produit</h1>
+    
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Nom du produit -->
+        <div>
+            <label for="{{ form.pro_name.id_for_label }}" class="block text-sm font-medium text-secondary-700 mb-1">
+                Nom du produit
+            </label>
+            <input type="text" name="{{ form.pro_name.name }}" id="{{ form.pro_name.id_for_label }}" 
+                   value="{{ form.pro_name.value|default_if_none:'' }}"
+                   class="block w-full px-4 py-2 border border-secondary-300 rounded-md shadow-sm focus:ring-accent-500 focus:border-accent-500 sm:text-sm {% if form.pro_name.errors %}border-red-500{% endif %}" 
+                   placeholder="Entrez le nom du produit">
+            {% if form.pro_name.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.pro_name.errors|join:", " }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Description du produit -->
+        <div>
+            <label for="{{ form.pro_desc.id_for_label }}" class="block text-sm font-medium text-secondary-700 mb-1">
+                Description
+            </label>
+            <textarea name="{{ form.pro_desc.name }}" id="{{ form.pro_desc.id_for_label }}" 
+                      class="block w-full px-4 py-2 border border-secondary-300 rounded-md shadow-sm focus:ring-accent-500 focus:border-accent-500 sm:text-sm {% if form.pro_desc.errors %}border-red-500{% endif %}" 
+                      rows="4" placeholder="Entrez une description du produit">{{ form.pro_desc.value|default_if_none:'' }}</textarea>
+            {% if form.pro_desc.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.pro_desc.errors|join:", " }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Prix du produit -->
+        <div>
+            <label for="{{ form.pro_price.id_for_label }}" class="block text-sm font-medium text-secondary-700 mb-1">
+                Prix (€)
+            </label>
+            <input type="number" step="0.01" name="{{ form.pro_price.name }}" id="{{ form.pro_price.id_for_label }}" 
+                   value="{{ form.pro_price.value|default_if_none:'' }}"
+                   class="block w-full px-4 py-2 border border-secondary-300 rounded-md shadow-sm focus:ring-accent-500 focus:border-accent-500 sm:text-sm {% if form.pro_price.errors %}border-red-500{% endif %}" 
+                   placeholder="Entrez le prix du produit">
+            {% if form.pro_price.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.pro_price.errors|join:", " }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Catégorie -->
+        <div>
+            <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-secondary-700 mb-1">
+                Catégorie
+            </label>
+            <select name="{{ form.category.name }}" id="{{ form.category.id_for_label }}" 
+                    class="block w-full px-4 py-2 border border-secondary-300 rounded-md shadow-sm focus:ring-accent-500 focus:border-accent-500 sm:text-sm {% if form.category.errors %}border-red-500{% endif %}">
+                <option value="" disabled {% if not form.category.value %}selected{% endif %}>Sélectionnez une catégorie</option>
+                {% for category in form.category.field.queryset %}
+                    <option value="{{ category.id }}" {% if form.category.value == category.id|stringformat:"s" %}selected{% endif %}>
+                        {{ category.cat_name }}
+                    </option>
+                {% endfor %}
+            </select>
+            {% if form.category.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.category.errors|join:", " }}</p>
+            {% endif %}
+        </div>
+
+        <!-- URL de l'image du produit -->
+        <div>
+            <label for="{{ form.image_url.id_for_label }}" class="block text-sm font-medium text-secondary-700 mb-1">
+                URL de l'image du produit
+            </label>
+            <input type="url" name="{{ form.image_url.name }}" id="{{ form.image_url.id_for_label }}" 
+                   value="{{ form.image_url.value|default_if_none:'' }}"
+                   class="block w-full px-4 py-2 border border-secondary-300 rounded-md shadow-sm focus:ring-accent-500 focus:border-accent-500 sm:text-sm {% if form.image_url.errors %}border-red-500{% endif %}" 
+                   placeholder="Entrez l'URL de l'image (ex: https://example.com/image.jpg)">
+            {% if form.image_url.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.image_url.errors|join:", " }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Boutons -->
+        <div class="flex justify-end space-x-4">
+            <a href="{% url 'product_list' %}" class="inline-flex items-center px-4 py-2 border border-secondary-300 rounded-md shadow-sm text-sm font-medium text-secondary-700 bg-white hover:bg-secondary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-500">
+                Annuler
+            </a>
+            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                Ajouter le produit
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

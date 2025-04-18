@@ -1,0 +1,13 @@
+{% extends 'user/base.html' %}
+
+{% block title %}Supprimer le produit{% endblock %}
+
+{% block content %}
+    <h1>Supprimer {{ product.pro_name }}</h1>
+    <p>Êtes-vous sûr de vouloir supprimer ce produit ?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmer</button>
+    </form>
+    <a href="{% url 'home' %}">Annuler</a>
+{% endblock %}

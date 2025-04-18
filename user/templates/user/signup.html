@@ -1,0 +1,79 @@
+{% extends 'user/base.html' %}
+
+{% block title %}Inscription - MyShop{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div class="text-center">
+      <i class="fas fa-shopping-bag text-5xl text-indigo-600 mb-4"></i>
+      <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+        Créez votre compte
+      </h2>
+      <p class="mt-2 text-sm text-gray-600">
+        Déjà un compte ? <a href="{% url 'login' %}" class="font-medium text-indigo-600 hover:text-indigo-500">Connectez-vous</a>
+      </p>
+    </div>
+    
+    <form class="mt-8 space-y-6" method="POST">
+      {% csrf_token %}
+      <div class="rounded-md shadow-sm space-y-4">
+        <!-- Nom d'utilisateur -->
+        <div>
+          <label for="username" class="sr-only">Nom d'utilisateur</label>
+          <input id="username" name="username" type="text" required
+                 class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                 placeholder="Nom d'utilisateur">
+          <p class="mt-1 text-xs text-gray-500">150 caractères maximum. Lettres, chiffres et @/./+/-/_ uniquement.</p>
+        </div>
+        
+        <!-- Email -->
+        <div>
+          <label for="email" class="sr-only">Adresse email</label>
+          <input id="email" name="email" type="email" required
+                 class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                 placeholder="Adresse email">
+        </div>
+        
+        <!-- Mot de passe -->
+        <div>
+          <label for="password1" class="sr-only">Mot de passe</label>
+          <input id="password1" name="password1" type="password" required
+                 class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                 placeholder="Mot de passe">
+        </div>
+        
+        <!-- Confirmation mot de passe -->
+        <div>
+          <label for="password2" class="sr-only">Confirmation du mot de passe</label>
+          <input id="password2" name="password2" type="password" required
+                 class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                 placeholder="Confirmez le mot de passe">
+        </div>
+      </div>
+
+      <div class="flex items-center">
+        <input id="terms" name="terms" type="checkbox" required
+               class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+        <label for="terms" class="ml-2 block text-sm text-gray-900">
+          J'accepte les <a href="#" class="text-indigo-600 hover:text-indigo-500">conditions d'utilisation</a>
+        </label>
+      </div>
+
+      <div>
+        <button type="submit"
+                class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+            <i class="fas fa-user-plus text-indigo-500 group-hover:text-indigo-400"></i>
+          </span>
+          S'inscrire
+        </button>
+      </div>
+    </form>
+    
+    <div class="mt-6 text-center text-sm text-gray-500">
+      <p>© 2025 MyShop. Tous droits réservés.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

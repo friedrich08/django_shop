@@ -1,0 +1,21 @@
+{% extends 'user/base.html' %}
+
+{% block title %}Tableau de bord Admin{% endblock %}
+
+{% block content %}
+    <h1>Tableau de bord Admin</h1>
+    <h2>Produits</h2>
+    {% if products %}
+        <ul>
+        {% for product in products %}
+            <li>{{ product.pro_name }} - {{ product.pro_price }} € (par {{ product.user.username }}) 
+                <a href="{% url 'update_product' product.id %}">Modifier</a> |
+                <a href="{% url 'delete_product' product.id %}">Supprimer</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun produit.</p>
+    {% endif %}
+    <p><a href="{% url 'category_list' %}">Gérer les catégories</a></p>
+{% endblock %}

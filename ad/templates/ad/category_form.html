@@ -1,0 +1,15 @@
+{% extends 'user/base.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}Modifier la catégorie{% else %}Créer une catégorie{% endif %}
+{% endblock %}
+
+{% block content %}
+    <h1>{% if form.instance.pk %}Modifier la catégorie{% else %}Créer une catégorie{% endif %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">{% if form.instance.pk %}Mettre à jour{% else %}Créer{% endif %}</button>
+    </form>
+    <a href="{% url 'category_list' %}">Annuler</a>
+{% endblock %}

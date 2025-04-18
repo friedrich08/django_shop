@@ -1,0 +1,27 @@
+{% extends 'user/base.html' %}
+
+{% block title %}Supprimer Mon Compte{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <div class="text-center mb-6">
+        <h2 class="text-3xl font-bold text-red-500">Êtes-vous sûr de vouloir supprimer votre compte ?</h2>
+        <p class="text-gray-600">Cette action est irréversible et entraînera la suppression de toutes vos données.</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="text-center">
+                <button type="submit" class="btn btn-red w-full text-center mt-4">
+                    Supprimer définitivement
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="mt-6 text-center">
+        <a href="{% url 'home' %}" class="text-blue-600 hover:text-blue-800">Retourner à la page d'accueil</a>
+    </div>
+</div>
+{% endblock %}

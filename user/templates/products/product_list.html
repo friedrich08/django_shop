@@ -1,0 +1,231 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+<div class="bg-gradient-to-b from-gray-50 to-white min-h-screen py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- En-tête avec titre et bouton d'ajout -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 flex items-center">
+                <span class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                </span>
+                Catalogue Produits
+            </h2>
+            <a href="{% url 'product_create' %}" class="mt-4 md:mt-0 inline-flex items-center px-5 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out transform hover:-translate-y-0.5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+            </a>
+        </div>
+        
+        <!-- Carte de recherche et filtrage -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <form method="get" class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                <div class="relative md:col-span-5">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <input type="text" name="search" value="{{ search_query }}" class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm" placeholder="Rechercher un produit...">
+                </div>
+                
+                <div class="relative md:col-span-4">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
+                    </div>
+                    <select name="category" class="block w-full pl-10 pr-10 py-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none text-sm">
+                        <option value="">Toutes catégories</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                                {{ category.cat_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="md:col-span-3">
+                    <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                        </svg>
+                        Rechercher
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Grille de cartes -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for product in products %}
+            <div class="group relative bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                <!-- Badge Prix -->
+                <div class="absolute top-4 right-4 z-10">
+                    <div class="rounded-full px-3 py-1.5 bg-indigo-600 text-white font-bold text-sm shadow-md">
+                        {{ product.pro_price }} €
+                    </div>
+                </div>
+                
+                <!-- Image du produit -->
+                <div class="relative h-56 overflow-hidden bg-gray-100">
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" alt="{{ product.pro_name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Overlay des actions au survol -->
+                    <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-3 transition-opacity duration-300">
+                        <a href="{% url 'product_detail' product.id %}" class="rounded-full p-2 bg-white text-indigo-600 hover:text-indigo-800 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </a>
+                        <a href="{% url 'product_update' product.id %}" class="rounded-full p-2 bg-white text-amber-600 hover:text-amber-800 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </a>
+                        <a href="{% url 'product_delete' product.id %}" class="rounded-full p-2 bg-white text-red-600 hover:text-red-800 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Corps de la carte -->
+                <div class="p-5">
+                    <!-- Nom du produit -->
+                    <h3 class="text-lg font-bold text-gray-800 truncate mb-2" title="{{ product.pro_name }}">
+                        {{ product.pro_name }}
+                    </h3>
+                    
+                    <!-- Badge catégorie -->
+                    <div class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-indigo-100 text-indigo-800 mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
+                        {{ product.category.cat_name }}
+                    </div>
+                    
+                    <!-- Date de création -->
+                    <div class="flex items-center text-xs text-gray-500 mt-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span>Ajouté le {{ product.created_at|date:"d/m/Y" }}</span>
+                    </div>
+                </div>
+
+                <!-- Pied de carte avec un bouton principal -->
+                <div class="px-5 py-3 bg-gray-50 border-t border-gray-100">
+                    <a href="{% url 'product_detail' product.id %}" class="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Consulter ce produit
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full py-16 px-8 bg-white rounded-xl shadow-md text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 text-gray-400 mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Aucun produit disponible</h3>
+                <p class="text-gray-500 mb-8 max-w-md mx-auto">Aucun produit ne correspond à vos critères de recherche. Vous pouvez modifier vos filtres ou ajouter un nouveau produit.</p>
+                <a href="{% url 'product_create' %}" class="inline-flex items-center px-5 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav class="mt-10 flex justify-center">
+            <ul class="inline-flex items-center space-x-2">
+                {% if page_obj.has_previous %}
+                    <li>
+                        <a href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                           class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <svg class="h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            Précédent
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <span class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-300 bg-gray-50 cursor-not-allowed">
+                            <svg class="h-5 w-5 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            Précédent
+                        </span>
+                    </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li>
+                            <span class="inline-flex items-center justify-center w-10 h-10 rounded-full border-2 border-indigo-600 text-sm font-bold text-indigo-600 bg-indigo-50">
+                                {{ num }}
+                            </span>
+                        </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li>
+                            <a href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                               class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                {{ num }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li>
+                        <a href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                           class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            Suivant
+                            <svg class="h-5 w-5 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <span class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-300 bg-gray-50 cursor-not-allowed">
+                            Suivant
+                            <svg class="h-5 w-5 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

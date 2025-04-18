@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MyShop - Votre Boutique en Ligne Premium{% endblock %}</title>
+    <meta name="description" content="Découvrez notre sélection exclusive de produits de qualité sur MyShop. Livraison rapide et service client exceptionnel.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        accent: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            300: '#fcd34d',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            800: '#92400e',
+                            900: '#78350f',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://via.placeholder.com/32/f59e0b/ffffff?text=MS">
+    
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Smooth transitions */
+        .transition-all {
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 200ms;
+        }
+        
+        /* Animation for alerts */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        /* Ensure footer stays at bottom */
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex: 1 0 auto;
+        }
+        footer {
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans text-secondary-800 antialiased">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Logo + Mobile menu button -->
+                <div class="flex items-center">
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-secondary-500 hover:text-secondary-600 hover:bg-secondary-50 focus:outline-none lg:hidden">
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    
+                    <!-- Logo -->
+                    <a href="{% url 'home' %}" class="flex-shrink-0 flex items-center ml-4 lg:ml-0">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-md bg-accent-500 text-white">
+                            <i class="fas fa-shopping-bag text-xl"></i>
+                        </div>
+                        <span class="ml-3 text-xl font-bold text-secondary-900 hidden sm:block">MyShop</span>
+                    </a>
+                    
+                    <!-- Desktop navigation -->
+                    <div class="hidden lg:ml-8 lg:flex lg:space-x-8">
+                        <a href="{% url 'home' %}" class="border-transparent text-secondary-500 hover:text-secondary-700 hover:border-accent-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            <i class="fas fa-home mr-2"></i> Accueil
+                        </a>
+                        <a href="{% url 'product_list' %}" class="border-transparent text-secondary-500 hover:text-secondary-700 hover:border-accent-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            <i class="fas fa-shopping-cart mr-2"></i> Produits
+                        </a>
+                        <!-- Catégories avec menu déroulant -->
+                        <div class="relative group">
+                            <button class="border-transparent text-secondary-500 hover:text-secondary-700 hover:border-accent-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                <i class="fas fa-tags mr-2"></i> Catégories
+                                <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div class="absolute z-10 left-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                <div class="py-1">
+                                    <a href="{% url 'category_list' %}" class="text-secondary-700 hover:bg-secondary-50 block px-4 py-2 text-sm">
+                                        <i class="fas fa-list mr-2 text-accent-500"></i> Toutes les catégories
+                                    </a>
+                                    {% for category in categories %}
+                                        <a href="{% url 'product_list' %}?category={{ category.id }}" class="text-secondary-700 hover:bg-secondary-50 block px-4 py-2 text-sm">
+                                            <i class="fas fa-circle text-xs mr-2 text-accent-500"></i> {{ category.cat_name }}
+                                        </a>
+                                    {% empty %}
+                                        <span class="block px-4 py-2 text-sm text-secondary-500">Aucune catégorie disponible</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Admin Management Menu (visible only to admins) -->
+                        {% if user.is_authenticated and user.is_admin %}
+                            <div class="relative group">
+                                <button class="border-transparent text-secondary-500 hover:text-secondary-700 hover:border-accent-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                    <i class="fas fa-cog mr-2"></i> Gestion
+                                    <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div class="absolute z-10 left-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                    <div class="py-1">
+                                        <!-- Product Management -->
+                                        <a href="{% url 'product_create' %}" class="text-secondary-700 hover:bg-secondary-50 block px-4 py-2 text-sm">
+                                            <i class="fas fa-plus-circle mr-2 text-accent-500"></i> Ajouter un produit
+                                        </a>
+                                        <a href="{% url 'product_list' %}" class="text-secondary-700 hover:bg-secondary-50 block px-4 py-2 text-sm">
+                                            <i class="fas fa-edit mr-2 text-accent-500"></i> Gérer les produits
+                                        </a>
+                                        <!-- Category Management -->
+                                        <a href="{% url 'category_create' %}" class="text-secondary-700 hover:bg-secondary-50 block px-4 py-2 text-sm">
+                                            <i class="fas fa-tag mr-2 text-accent-500"></i> Ajouter une catégorie
+                                        </a>
+                                        <a href="{% url 'category_list' %}" class="text-secondary-700 hover:bg-secondary-50 block px-4 py-2 text-sm">
+                                            <i class="fas fa-edit mr-2 text-accent-500"></i> Gérer les catégories
+                                        </a>
+                                        <!-- Admin Dashboard -->
+                                        <a href="{% url 'home' %}" class="text-secondary-700 hover:bg-secondary-50 block px-4 py-2 text-sm">
+                                            <i class="fas fa-user-shield mr-2 text-accent-500"></i> Tableau de bord
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- User actions -->
+                <div class="flex items-center">
+                    <!-- Search (mobile) -->
+                    <button id="mobile-search-button" class="p-2 rounded-md text-secondary-500 hover:text-secondary-600 hover:bg-secondary-50 lg:hidden">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    
+                    <!-- Search (desktop) -->
+                    <div class="hidden lg:flex lg:items-center lg:ml-4">
+                        <div class="relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-secondary-400"></i>
+                            </div>
+                            <input type="text" name="search" id="desktop-search" class="focus:ring-accent-500 focus:border-accent-500 block w-full pl-10 pr-3 py-2 border border-secondary-300 rounded-md leading-5 bg-white placeholder-secondary-400 text-secondary-700 sm:text-sm transition duration-150 ease-in-out" placeholder="Rechercher...">
+                        </div>
+                    </div>
+                    
+                    <!-- User dropdown -->
+                    <div class="ml-4 flex items-center">
+                        {% if user.is_authenticated %}
+                            <div class="relative ml-3">
+                                <div>
+                                    <button id="user-menu-button" class="flex items-center max-w-xs text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-500">
+                                        <span class="sr-only">Ouvrir le menu utilisateur</span>
+                                        <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name={{ user.username }}&background=0ea5e9&color=fff" alt="{{ user.username }}">
+                                        <span class="ml-2 hidden md:inline text-sm font-medium text-secondary-700">{{ user.username }}</span>
+                                        <svg class="ml-1 h-4 w-4 text-secondary-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                
+                                <!-- Dropdown menu -->
+                                <div id="user-menu" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 invisible transition-all duration-200 z-50">
+                                    <a href="{% url 'profile' %}" class="block px-4 py-2 text-sm text-secondary-700 hover:bg-secondary-50">
+                                        <i class="fas fa-user-circle mr-2 text-accent-500"></i> Mon profil
+                                    </a>
+                                    <a href="{% url 'profile_edit' %}" class="block px-4 py-2 text-sm text-secondary-700 hover:bg-secondary-50">
+                                        <i class="fas fa-cog mr-2 text-accent-500"></i> Paramètres
+                                    </a>
+                                    <div class="border-t border-secondary-100"></div>
+                                    <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm text-secondary-700 hover:bg-secondary-50">
+                                        <i class="fas fa-sign-out-alt mr-2 text-accent-500"></i> Déconnexion
+                                    </a>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="hidden md:flex items-center space-x-4">
+                                <a href="{% url 'login' %}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-150">
+                                    Connexion
+                                </a>
+                                <a href="{% url 'signup' %}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-primary-700 bg-accent-400 hover:bg-accent-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-500 transition duration-150">
+                                    Inscription
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="lg:hidden hidden">
+            <div class="pt-2 pb-3 space-y-1">
+                <a href="{% url 'home' %}" class="bg-accent-50 border-accent-500 text-accent-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                    <i class="fas fa-home mr-2"></i> Accueil
+                </a>
+                <a href="{% url 'product_list' %}" class="border-transparent text-secondary-600 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                    <i class="fas fa-shopping-cart mr-2"></i> Produits
+                </a>
+                <!-- Catégories dans le menu mobile -->
+                <div class="relative">
+                    <button id="mobile-categories-button" class="w-full border-transparent text-secondary-600 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium flex items-center justify-between">
+                        <span><i class="fas fa-tags mr-2"></i> Catégories</span>
+                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div id="mobile-categories-menu" class="hidden pl-6 space-y-1">
+                        <a href="{% url 'category_list' %}" class="border-transparent text-secondary-600 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-800 block pl-3 pr-4 py-2 border-l-4 text-sm font-medium">
+                            <i class="fas fa-list mr-2"></i> Toutes les catégories
+                        </a>
+                        {% for category in categories %}
+                            <a href="{% url 'product_list' %}?category={{ category.id }}" class="border-transparent text-secondary-600 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-800 block pl-3 pr-4 py-2 border-l-4 text-sm font-medium">
+                                <i class="fas fa-circle text-xs mr-2"></i> {{ category.cat_name }}
+                            </a>
+                        {% empty %}
+                            <span class="block pl-3 pr-4 py-2 text-sm text-secondary-500">Aucune catégorie disponible</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Admin Management Menu (Mobile, visible only to admins) -->
+                {% if user.is_authenticated and user.is_admin %}
+                    <div class="pt-2">
+                        <div class="border-t border-secondary-200"></div>
+                        <h3 class="px-3 pt-3 text-xs font-semibold text-secondary-500 uppercase tracking-wider">Gestion</h3>
+                        <a href="{% url 'product_create' %}" class="border-transparent text-secondary-600 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                            <i class="fas fa-plus-circle mr-2"></i> Ajouter un produit
+                        </a>
+                        <a href="{% url 'product_list' %}" class="border-transparent text-secondary-600 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                            <i class="fas fa-edit mr-2"></i> Gérer les produits
+                        <a href="{% url 'category_create' %}">Ajouter une catégorie</a>
+                        </a>
+                        <a href="{% url 'category_create' %}" class="border-transparent text-secondary-600 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                            <i class="fas fa-tag mr-2"></i> Ajouter une catégorie
+                        </a>
+                        <a href="{% url 'category_list' %}" class="border-transparent text-secondary-600 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                            <i class="fas fa-edit mr-2"></i> Gérer les catégories
+                        </a>
+                        <a href="{% url 'home' %}" class="border-transparent text-secondary-600 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                            <i class="fas fa-user-shield mr-2"></i> Tableau de bord
+                        </a>
+                    </div>
+                {% endif %}
+                
+                {% if user.is_authenticated %}
+                    <div class="pt-2">
+                        <div class="border-t border-secondary-200"></div>
+                        <h3 class="px-3 pt-3 text-xs font-semibold text-secondary-500 uppercase tracking-wider">Mon compte</h3>
+                        <a href="{% url 'profile' %}" class="border-transparent text-secondary-600 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                            <i class="fas fa-user-circle mr-2"></i> Mon profil
+                        </a>
+                        <a href="{% url 'profile_edit' %}" class="border-transparent text-secondary-600 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                            <i class="fas fa-cog mr-2"></i> Paramètres
+                        </a>
+                        <a href="{% url 'logout' %}" class="border-transparent text-secondary-600 hover:bg-secondary-50 hover:border-secondary-300 hover:text-secondary-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="pt-4 pb-2 border-t border-secondary-200">
+                        <div class="flex items-center px-5 space-x-2">
+                            <a href="{% url 'login' %}" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700">
+                                Connexion
+                            </a>
+                            <a href="{% url 'signup' %}" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-700 bg-accent-400 hover:bg-accent-500">
+                                Inscription
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Messages (pour afficher les succès/erreurs) -->
+        {% if messages %}
+            <div class="mb-6 space-y-3">
+                {% for message in messages %}
+                    <div class="animate-fade-in rounded-md p-4 {% if message.tags == 'success' %}bg-green-50 text-green-800{% elif message.tags == 'error' %}bg-red-50 text-red-800{% else %}bg-blue-50 text-blue-800{% endif %}">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                {% if message.tags == 'success' %}
+                                    <i class="fas fa-check-circle h-5 w-5 text-green-400"></i>
+                                {% elif message.tags == 'error' %}
+                                    <i class="fas fa-exclamation-circle h-5 w-5 text-red-400"></i>
+                                {% else %}
+                                    <i class="fas fa-info-circle h-5 w-5 text-blue-400"></i>
+                                {% endif %}
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium">
+                                    {{ message }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer (réduit en hauteur) -->
+    <footer class="bg-white border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center text-sm">
+                <div class="flex items-center">
+                    <div class="flex items-center justify-center h-6 w-6 rounded-md bg-accent-500 text-white">
+                        <i class="fas fa-shopping-bag text-sm"></i>
+                    </div>
+                    <span class="ml-2 font-bold text-secondary-900">MyShop</span>
+                </div>
+                <p class="mt-2 md:mt-0 text-secondary-500">
+                    © 2025 MyShop. Tous droits réservés.
+                </p>
+                <div class="mt-2 md:mt-0 flex space-x-4">
+                    <a href="#" class="text-secondary-500 hover:text-primary-600">Mentions légales</a>
+                    <a href="#" class="text-secondary-500 hover:text-primary-600">Confidentialité</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Gestion du menu mobile
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const userMenuButton = document.getElementById('user-menu-button');
+        const userMenu = document.getElementById('user-menu');
+        const mobileCategoriesButton = document.getElementById('mobile-categories-button');
+        const mobileCategoriesMenu = document.getElementById('mobile-categories-menu');
+        
+        // Toggle mobile menu
+        mobileMenuButton.addEventListener('click', () => {
+            const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !expanded);
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Toggle user menu
+        userMenuButton.addEventListener('click', () => {
+            const expanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+            userMenuButton.setAttribute('aria-expanded', !expanded);
+            userMenu.classList.toggle('opacity-0');
+            userMenu.classList.toggle('invisible');
+            userMenu.classList.toggle('opacity-100');
+            userMenu.classList.toggle('visible');
+        });
+
+        // Toggle mobile categories menu
+        mobileCategoriesButton.addEventListener('click', () => {
+            const expanded = mobileCategoriesButton.getAttribute('aria-expanded') === 'true';
+            mobileCategoriesButton.setAttribute('aria-expanded', !expanded);
+            mobileCategoriesMenu.classList.toggle('hidden');
+        });
+        
+        // Close menus when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userMenu.contains(e.target) && !userMenuButton.contains(e.target)) {
+                userMenu.classList.add('opacity-0', 'invisible');
+                userMenu.classList.remove('opacity-100', 'visible');
+                userMenuButton.setAttribute('aria-expanded', 'false');
+            }
+            if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+                mobileMenuButton.setAttribute('aria-expanded', 'false');
+            }
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
