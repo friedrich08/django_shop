@@ -1,0 +1,140 @@
+{% extends "user/base.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Success Card -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-green-400 to-blue-500 p-6 sm:p-8 text-white">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <div>
+                        <h2 class="text-2xl sm:text-3xl font-bold">Paiement confirmé</h2>
+                        <p class="mt-2 opacity-90">Merci pour votre confiance, {{ sale.user.username }} !</p>
+                    </div>
+                    <div class="mt-4 sm:mt-0 bg-white bg-opacity-20 rounded-full px-4 py-2">
+                        <span class="font-medium">N°{{ sale.id }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6 sm:p-8">
+                <!-- Transaction Details -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Détails de la transaction</h3>
+                        <div class="space-y-2">
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Date :</span>
+                                <span class="font-medium">{{ payment.created_at|date:"d/m/Y H:i" }}</span>
+                            </p>
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Méthode :</span>
+                                <span class="font-medium">{{ payment.paymethod.pay_name }}</span>
+                            </p>
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Statut :</span>
+                                <span class="font-medium text-green-600">Complété</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Récapitulatif</h3>
+                        <div class="space-y-2">
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Articles :</span>
+                                <span class="font-medium">{{ bills|length }}</span>
+                            </p>
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Sous-total :</span>
+                                <span class="font-medium">{{ total|floatformat:2 }} EUR</span>
+                            </p>
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Frais :</span>
+                                <span class="font-medium">0.00 EUR</span>
+                            </p>
+                            <p class="flex justify-between border-t border-gray-200 pt-2 mt-2">
+                                <span class="text-gray-800 font-semibold">Total :</span>
+                                <span class="text-green-600 font-bold">{{ total|floatformat:2 }} EUR</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Table -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Détail des articles</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produit</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantité</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix unitaire</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {% for bill in bills %}
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-md overflow-hidden">
+                                                <!-- Product image would go here -->
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">{{ bill.product.pro_name }}</div>
+                                                <div class="text-sm text-gray-500">SKU: {{ bill.product.id }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ bill.qty }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ bill.product.pro_price|floatformat:2 }} EUR
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        {{ bill.sale_price|floatformat:2 }} EUR
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot class="bg-gray-50">
+                                <tr>
+                                    <td colspan="3" class="px-6 py-4 text-right text-sm font-medium text-gray-900">Total</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-lg font-bold text-green-600">{{ total|floatformat:2 }} EUR</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex flex-col sm:flex-row justify-center gap-4 pt-6 border-t border-gray-200">
+                    <a href="{% url 'download_invoice' payment.id %}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 transition-all">
+                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Télécharger la facture
+                    </a>
+                    <a href="{% url 'product_list' %}" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 rounded-md shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                        <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Retour à la boutique
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="mt-8 text-center text-sm text-gray-500">
+            <p>Un email de confirmation vous a été envoyé à l'adresse associée à votre compte.</p>
+            <p class="mt-1">Pour toute question concernant votre commande, contactez notre service client.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -75,15 +75,7 @@ from .models import Product
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['pro_name', 'pro_price', 'pro_desc', 'category', 'image_url']  # Remplace 'image' par 'image_url'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['pro_name'].widget.attrs.update({'class': 'block w-full px-4 py-2 border border-secondary-300 rounded-md shadow-sm focus:ring-accent-500 focus:border-accent-500 sm:text-sm'})
-        self.fields['pro_desc'].widget.attrs.update({'class': 'block w-full px-4 py-2 border border-secondary-300 rounded-md shadow-sm focus:ring-accent-500 focus:border-accent-500 sm:text-sm', 'rows': '4'})
-        self.fields['pro_price'].widget.attrs.update({'class': 'block w-full px-4 py-2 border border-secondary-300 rounded-md shadow-sm focus:ring-accent-500 focus:border-accent-500 sm:text-sm', 'step': '0.01'})
-        self.fields['category'].widget.attrs.update({'class': 'block w-full px-4 py-2 border border-secondary-300 rounded-md shadow-sm focus:ring-accent-500 focus:border-accent-500 sm:text-sm'})
-        self.fields['image_url'].widget.attrs.update({'class': 'block w-full px-4 py-2 border border-secondary-300 rounded-md shadow-sm focus:ring-accent-500 focus:border-accent-500 sm:text-sm'})
+        fields = ['pro_name', 'pro_price', 'pro_desc', 'category', 'user', 'image']
 
 
 class CategoryForm(forms.ModelForm):

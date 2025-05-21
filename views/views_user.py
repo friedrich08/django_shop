@@ -10,25 +10,31 @@ from user.models import Role  # Importer le modèle Role
 def home(request):
     return render(request, 'user/home.html')
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from django.contrib import messages
+from user.forms import EmailAuthenticationForm
+
 def user_login(request):
     if request.user.is_authenticated:
         return redirect('home')
 
     if request.method == 'POST':
         form = EmailAuthenticationForm(request, data=request.POST)
+        next_url = request.POST.get('next') or 'home'
+
         if form.is_valid():
-            email = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
             user = form.get_user()
             login(request, user)
             messages.success(request, f"Connexion réussie. Bienvenue {user.username} !")
-            return redirect('home')
+            return redirect(next_url)
         else:
             messages.error(request, "Email ou mot de passe incorrect.")
     else:
         form = EmailAuthenticationForm()
+        next_url = request.GET.get('next') or 'home'
 
-    return render(request, 'user/login.html', {'form': form})
+    return render(request, 'user/login.html', {'form': form, 'next': next_url})
 
 @login_required
 def profile_edit(request):

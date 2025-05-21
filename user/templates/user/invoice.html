@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Facture - Vente #{{ sale.id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .header {
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .info-section {
+            margin-bottom: 20px;
+        }
+        .info-section p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            background-color: #2c3e50;
+            color: #fff;
+            font-weight: bold;
+        }
+        .total-row td {
+            font-weight: bold;
+            background-color: #f2f2f2;
+        }
+        .payment-method {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="header">
+            <h1>Facture</h1>
+            <p style="text-align: center;">Vente n° {{ sale.id }} - {{ now|date:"Y-m-d" }}</p>
+        </div>
+
+        <div class="info-section">
+            <h2>Client</h2>
+            <p><strong>Nom:</strong> {{ sale.user.username|escape }}</p>
+            <p><strong>Email:</strong> {{ sale.user.email|escape }}</p>
+        </div>
+
+        <div class="info-section">
+            <h2>Détails de la commande</h2>
+            <table>
+                <tr>
+                    <th>Produit</th>
+                    <th>Quantité</th>
+                    <th>Prix</th>
+                </tr>
+                {% for bill in bills %}
+                <tr>
+                    <td>{{ bill.product.pro_name|escape }}</td>
+                    <td>{{ bill.qty }}</td>
+                    <td>{{ bill.sale_price|floatformat:2 }} EUR</td>
+                </tr>
+                {% endfor %}
+                <tr class="total-row">
+                    <td colspan="2">Total</td>
+                    <td>{{ payment.amount|floatformat:2 }} EUR</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="payment-method">
+            <h2>Méthode de paiement</h2>
+            <p><strong>Méthode:</strong> {{ payment.paymethod.pay_name }}</p>
+        </div>
+    </div>
+</body>
+</html>

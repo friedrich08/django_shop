@@ -176,6 +176,10 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="hidden lg:ml-8 lg:flex lg:space-x-8">
+                        <a href="{% url 'cart_view' %}" class="border-transparent text-secondary-500 hover:text-secondary-700 hover:border-accent-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                        <i class="fas fa-shopping-cart mr-2"></i>Panier
+                        </a>
                         <!-- Admin Management Menu (visible only to admins) -->
                         {% if user.is_authenticated and user.is_admin %}
                             <div class="relative group">

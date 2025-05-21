@@ -1,0 +1,97 @@
+{% extends 'user/base.html' %}
+{% block content %}
+
+<div class="bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-800">Votre Panier</h2>
+            <div class="mt-4 md:mt-0">
+                <span class="text-lg font-semibold text-gray-600">Total du panier :</span>
+                <span class="ml-2 text-2xl font-bold text-indigo-600">{{ total }} €</span>
+            </div>
+        </div>
+
+        {% if cart_items %}
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="divide-y divide-gray-200">
+                {% for item in cart_items %}
+                <div class="p-6 flex flex-col md:flex-row gap-6 hover:bg-gray-50 transition-colors">
+                    <div class="flex-shrink-0">
+                        <img src="{{ item.product.pro_image.url|default:'https://via.placeholder.com/150' }}" 
+                             alt="{{ item.product.pro_name }}"
+                             class="h-32 w-32 object-cover rounded-lg">
+                    </div>
+                    
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-start">
+                            <h3 class="text-xl font-semibold text-gray-800">{{ item.product.pro_name }}</h3>
+                            <span class="text-lg font-bold text-indigo-600">{{ item.get_total_price }} €</span>
+                        </div>
+                        
+                        <p class="mt-1 text-gray-500">{{ item.product.pro_description|truncatechars:100 }}</p>
+                        
+                        <div class="mt-4 flex items-center">
+                            <span class="text-gray-600 mr-3">Quantité :</span>
+                            <form method="post" action="{% url 'update_cart' action='decrease' cart_item_id=item.id %}" class="flex items-center">
+    {% csrf_token %}
+    <button type="submit" class="px-3 py-1 bg-gray-200 rounded-l-lg hover:bg-gray-300 transition-colors">
+        -
+    </button>
+</form>
+
+<span class="px-4 py-1 bg-gray-100 text-center w-12">{{ item.quantity }}</span>
+
+<form method="post" action="{% url 'update_cart' action='increase' cart_item_id=item.id %}" class="flex items-center">
+    {% csrf_token %}
+    <button type="submit" class="px-3 py-1 bg-gray-200 rounded-r-lg hover:bg-gray-300 transition-colors">
+        +
+    </button>
+</form>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-shrink-0 self-center md:self-auto">
+                        <form method="post" action="{% url 'remove_from_cart' item.product.id %}">
+                            {% csrf_token %}
+                            <button type="submit" 
+                                    class="text-red-500 hover:text-red-700 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="p-6 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+                <a href="{% url 'product_list' %}">← Continuer mes achats</a>
+                
+                <a href="{% url 'confirm_payment' %}" 
+                   class="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">
+                    Passer la commande
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 -mr-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <div class="bg-white rounded-xl shadow-lg p-12 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <h3 class="mt-4 text-lg font-medium text-gray-900">Votre panier est vide</h3>
+            <p class="mt-2 text-gray-500">Commencez par ajouter quelques articles à votre panier.</p>
+            <div class="mt-6">
+                <a href="{% url 'products' %}" 
+                   class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">
+                    Parcourir les produits
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

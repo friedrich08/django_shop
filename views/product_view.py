@@ -51,7 +51,7 @@ class ProductDetailView(DetailView):
 class ProductCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Product
     template_name = 'products/product_create.html'
-    fields = ['pro_name', 'pro_desc', 'pro_price', 'category']
+    fields = ['pro_name', 'pro_desc', 'pro_price', 'category','image']
     success_url = reverse_lazy('product_list')
 
     def test_func(self):

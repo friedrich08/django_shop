@@ -78,8 +78,9 @@
                 
                 <!-- Image du produit -->
                 <div class="relative h-56 overflow-hidden bg-gray-100">
-                    {% if product.image_url %}
-                        <img src="{{ product.image_url }}" alt="{{ product.pro_name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                    {% if product.image %}
+                        <p>URL de l'image : {{ product.image.url }}</p>  <!-- Débogage -->
+                        <img src="{{ product.image.url }}" alt="{{ product.pro_name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" onerror="this.src='/static/images/placeholder.jpg';">
                     {% else %}
                         <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 text-gray-400">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">

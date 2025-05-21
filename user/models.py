@@ -76,7 +76,7 @@ class Product(models.Model):
         on_delete=models.CASCADE,
         related_name='products'
     )
-    image_url = models.URLField(max_length=500,null=False, blank=False)  #
+    image = models.ImageField(upload_to='products/', null=True, blank=True)  # Nouveau champ pour upload #
 
     def __str__(self):
         return self.pro_name
@@ -175,3 +175,40 @@ class Payment(models.Model):
 
     class Meta:
         indexes = [models.Index(fields=['sale', 'paymethod'])]
+
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey('Cart', on_delete=models.CASCADE, related_name='cart_items')
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('cart', 'product')
+        indexes = [models.Index(fields=['cart', 'product'])]
+
+    def __str__(self):
+        return f"{self.product.pro_name} x {self.quantity}"
+
+    def get_total_price(self):
+        return self.product.pro_price * self.quantity
+
+
+class Cart(models.Model):
+    user = models.OneToOneField('CustomUser', on_delete=models.CASCADE, related_name='cart')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Cart for {self.user.username}"
+
+    def get_total(self):
+        return sum(item.get_total_price() for item in self.cart_items.all())
+
+    class Meta:
+        indexes = [models.Index(fields=['user'])]
+
+
+    def get_total_quantity(self):
+        return sum(item.quantity for item in self.cart_items.all())
